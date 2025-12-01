@@ -353,6 +353,9 @@ function startGame(level) {
     .forEach((el) => el.classList.remove("active"));
   document.getElementById("quiz-modal").classList.remove("active");
 
+  // Show Touch Controls
+  document.getElementById("touch-controls").style.display = "flex";
+
   // Build Level Procedurally
   buildLevel(currentLevel);
 }
