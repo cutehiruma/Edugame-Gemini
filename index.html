@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Vocabulary Adventure Quest - 100 Words Edition</title>
     <style>
       /* --- CSS STYLES --- */
@@ -16,12 +19,14 @@
         align-items: center;
         height: 100vh;
         overflow: hidden;
+        touch-action: none; /* Prevent browser gestures */
       }
 
       #game-container {
         position: relative;
-        width: 800px;
-        height: 450px;
+        width: 100%;
+        max-width: 800px;
+        aspect-ratio: 16/9;
         background-color: #87ceeb; /* Sky Blue */
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         border-radius: 8px;
@@ -30,6 +35,8 @@
 
       canvas {
         display: block;
+        width: 100%;
+        height: 100%;
       }
 
       /* UI Overlays */
@@ -64,14 +71,15 @@
       /* Screens */
       .screen {
         background: rgba(255, 255, 255, 0.95);
-        padding: 40px;
+        padding: 2rem;
         border-radius: 15px;
         text-align: center;
         border: 4px solid #333;
         pointer-events: auto;
         display: none;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        max-width: 600px;
+        max-width: 80%;
+        width: 500px;
       }
 
       .screen.active {
@@ -93,7 +101,7 @@
       h1 {
         color: #4caf50;
         margin-top: 0;
-        font-size: 2.2rem;
+        font-size: 2rem;
       }
       h2 {
         color: #333;
@@ -129,9 +137,10 @@
       /* Quiz Modal */
       #quiz-modal {
         background: white;
-        padding: 30px;
+        padding: 20px;
         border-radius: 12px;
-        width: 500px;
+        width: 90%;
+        max-width: 500px;
         text-align: center;
         border: 4px solid #2196f3;
         pointer-events: auto;
@@ -173,6 +182,48 @@
         background-color: #e3f2fd;
         border-color: #2196f3;
       }
+
+      /* --- TOUCH CONTROLS --- */
+      #touch-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        pointer-events: none;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        box-sizing: border-box;
+        z-index: 20;
+      }
+
+      .control-group {
+        pointer-events: auto;
+        display: flex;
+        gap: 20px;
+      }
+
+      .touch-btn {
+        width: 65px;
+        height: 65px;
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        color: white;
+        font-size: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        backdrop-filter: blur(4px);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .touch-btn:active {
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0.95);
+      }
     </style>
   </head>
   <body>
@@ -191,7 +242,7 @@
         <h1>Vocabulary Quest</h1>
         <p>Journey through 5 levels of increasing difficulty!</p>
         <p>There are 20 words per level (100 total).</p>
-        <p><b>Controls:</b> Arrow Keys to Move & Jump</p>
+        <p><b>Controls:</b> Arrow Keys or Touch Buttons</p>
         <button onclick="startGame(1)">Start Level 1</button>
       </div>
 
@@ -228,6 +279,17 @@
         <p>You are a Vocabulary Master!</p>
         <p id="final-score-win">Score: 0</p>
         <button onclick="startGame(1)">Play Again</button>
+      </div>
+
+      <!-- Touch Controls -->
+      <div id="touch-controls">
+        <div class="control-group">
+          <div id="btn-left" class="touch-btn">←</div>
+          <div id="btn-right" class="touch-btn">→</div>
+        </div>
+        <div class="control-group">
+          <div id="btn-jump" class="touch-btn">↑</div>
+        </div>
       </div>
     </div>
 

@@ -275,6 +275,7 @@ let currentQuizCoin = null;
  * INITIALIZATION
  */
 function init() {
+  // Keyboard Controls
   window.addEventListener("keydown", (e) => {
     if (keys.hasOwnProperty(e.code)) keys[e.code] = true;
     if (e.code === "ArrowUp" && gameState === "PLAYING" && player.grounded) {
@@ -287,7 +288,54 @@ function init() {
     if (keys.hasOwnProperty(e.code)) keys[e.code] = false;
   });
 
+  // Touch Controls
+  setupTouchControls();
+
   requestAnimationFrame(gameLoop);
+}
+
+function setupTouchControls() {
+  const attachTouch = (id, key) => {
+    const btn = document.getElementById(id);
+    const press = (e) => {
+      e.preventDefault();
+      keys[key] = true;
+    };
+    const release = (e) => {
+      e.preventDefault();
+      keys[key] = false;
+    };
+
+    btn.addEventListener("touchstart", press, { passive: false });
+    btn.addEventListener("touchend", release, { passive: false });
+    btn.addEventListener("mousedown", press);
+    btn.addEventListener("mouseup", release);
+    btn.addEventListener("mouseleave", release);
+  };
+
+  attachTouch("btn-left", "ArrowLeft");
+  attachTouch("btn-right", "ArrowRight");
+
+  // Jump button needs special logic to trigger velocity
+  const jumpBtn = document.getElementById("btn-jump");
+  const jumpPress = (e) => {
+    e.preventDefault();
+    keys["ArrowUp"] = true;
+    if (gameState === "PLAYING" && player.grounded) {
+      player.vy = -JUMP_FORCE;
+      player.grounded = false;
+    }
+  };
+  const jumpRelease = (e) => {
+    e.preventDefault();
+    keys["ArrowUp"] = false;
+  };
+
+  jumpBtn.addEventListener("touchstart", jumpPress, { passive: false });
+  jumpBtn.addEventListener("touchend", jumpRelease, { passive: false });
+  jumpBtn.addEventListener("mousedown", jumpPress);
+  jumpBtn.addEventListener("mouseup", jumpRelease);
+  jumpBtn.addEventListener("mouseleave", jumpRelease);
 }
 
 function startGame(level) {
