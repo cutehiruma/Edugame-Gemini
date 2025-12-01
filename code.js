@@ -1,457 +1,280 @@
-/* --- JAVASCRIPT GAME LOGIC --- */
-
-// 1. DATA CONFIGURATION (100 WORDS POOL)
-const FULL_VOCAB_LIST = [
-  {
-    word: "recycle",
-    meaning: "to process used materials so they can be reused",
-  },
-  { word: "protect", meaning: "to keep something safe" },
-  { word: "pollution", meaning: "harmful substances in the environment" },
-  { word: "reduce", meaning: "to make something smaller or less" },
-  { word: "energy", meaning: "power used to do work" },
-  { word: "disaster", meaning: "a sudden event causing great damage" },
-  { word: "ancient", meaning: "belonging to the very distant past" },
-  { word: "benefit", meaning: "an advantage or profit gained from something" },
-  {
-    word: "celebrate",
-    meaning: "to acknowledge a significant event with a social gathering",
-  },
-  {
-    word: "develop",
-    meaning: "to grow or cause to grow and become more mature",
-  },
-  {
-    word: "environment",
-    meaning: "the surroundings or conditions in which a person lives",
-  },
-  {
-    word: "feature",
-    meaning: "a distinctive attribute or aspect of something",
-  },
-  { word: "generate", meaning: "to cause something to arise or come about" },
-  { word: "habit", meaning: "a settled or regular tendency or practice" },
-  {
-    word: "identify",
-    meaning: "to establish or indicate who or what someone is",
-  },
-  { word: "journey", meaning: "an act of traveling from one place to another" },
-  {
-    word: "knowledge",
-    meaning: "facts, information, and skills acquired through experience",
-  },
-  { word: "locate", meaning: "to discover the exact place or position of" },
-  {
-    word: "method",
-    meaning: "a particular form of procedure for accomplishing something",
-  },
-  {
-    word: "nature",
-    meaning: "the physical world collectively, including plants and animals",
-  },
-  {
-    word: "observe",
-    meaning: "to notice or perceive something and register it as significant",
-  },
-  {
-    word: "passenger",
-    meaning: "a traveler on a public or private conveyance",
-  },
-  {
-    word: "quality",
-    meaning: "the standard of something as measured against other things",
-  },
-  {
-    word: "recognize",
-    meaning:
-      "to identify someone or something from having encountered them before",
-  },
-  {
-    word: "solution",
-    meaning:
-      "a means of solving a problem or dealing with a difficult situation",
-  },
-  {
-    word: "technology",
-    meaning: "the application of scientific knowledge for practical purposes",
-  },
-  {
-    word: "unique",
-    meaning: "being the only one of its kind; unlike anything else",
-  },
-  {
-    word: "valuable",
-    meaning: "worth a great deal of money or having great importance",
-  },
-  {
-    word: "waste",
-    meaning: "to use or expend carelessly, extravagantly, or to no purpose",
-  },
-  { word: "youth", meaning: "the period between childhood and adult age" },
-  {
-    word: "adventure",
-    meaning:
-      "an unusual and exciting, typically hazardous, experience or activity",
-  },
-  {
-    word: "brave",
-    meaning: "ready to face and endure danger or pain; showing courage",
-  },
-  {
-    word: "calm",
-    meaning: "not showing or feeling nervousness, anger, or other emotions",
-  },
-  { word: "dangerous", meaning: "able or likely to cause harm or injury" },
-  { word: "eager", meaning: "wanting to do or have something very much" },
-  { word: "famous", meaning: "known about by many people" },
-  {
-    word: "gentle",
-    meaning: "having or showing a mild, kind, or tender temperament",
-  },
-  { word: "harvest", meaning: "the process or period of gathering in crops" },
-  { word: "imagine", meaning: "to form a mental image or concept of" },
-  { word: "justice", meaning: "just behavior or treatment" },
-  { word: "keen", meaning: "having or showing eagerness or enthusiasm" },
-  {
-    word: "landscape",
-    meaning: "all the visible features of an area of countryside",
-  },
-  {
-    word: "machine",
-    meaning: "an apparatus using or applying mechanical power",
-  },
-  {
-    word: "native",
-    meaning:
-      "associated with the country, region, or circumstances of a person's birth",
-  },
-  { word: "ocean", meaning: "a very large expanse of sea" },
-  {
-    word: "palace",
-    meaning: "the official residence of a sovereign or bishop",
-  },
-  {
-    word: "queue",
-    meaning: "a line or sequence of people or vehicles awaiting their turn",
-  },
-  { word: "rare", meaning: "not occurring very often" },
-  {
-    word: "safety",
-    meaning:
-      "the condition of being protected from or unlikely to cause danger",
-  },
-  { word: "talent", meaning: "natural aptitude or skill" },
-  { word: "understand", meaning: "to perceive the intended meaning of words" },
-  { word: "vacation", meaning: "an extended period of leisure and recreation" },
-  {
-    word: "wander",
-    meaning: "to walk or move in a leisurely, casual, or aimless way",
-  },
-  {
-    word: "xenophobia",
-    meaning: "dislike of or prejudice against people from other countries",
-  },
-  {
-    word: "yearn",
-    meaning: "to have an intense feeling of longing for something",
-  },
-  {
-    word: "zone",
-    meaning: "an area or stretch of land having a particular characteristic",
-  },
-  { word: "abroad", meaning: "in or to a foreign country or countries" },
-  {
-    word: "barrier",
-    meaning: "a fence or other obstacle that prevents movement or access",
-  },
-  { word: "camera", meaning: "a device for recording visual images" },
-  {
-    word: "damage",
-    meaning:
-      "physical harm caused to something in such a way as to impair its value",
-  },
-  {
-    word: "economy",
-    meaning: "the wealth and resources of a country or region",
-  },
-  {
-    word: "fabric",
-    meaning: "cloth or other material produced by weaving or knitting fibers",
-  },
-  {
-    word: "gallery",
-    meaning: "a room or building for the display or sale of works of art",
-  },
-  {
-    word: "harbor",
-    meaning: "a place on the coast where vessels may find shelter",
-  },
-  {
-    word: "iceberg",
-    meaning: "a large floating mass of ice detached from a glacier",
-  },
-  {
-    word: "jungle",
-    meaning:
-      "an area of land overgrown with dense forest and tangled vegetation",
-  },
-  {
-    word: "kangaroo",
-    meaning: "a large plant-eating marsupial with a long powerful tail",
-  },
-  {
-    word: "ladder",
-    meaning:
-      "a structure consisting of a series of bars or steps used for climbing",
-  },
-  {
-    word: "magnet",
-    meaning:
-      "a piece of iron that has its component atoms so ordered that the material exhibits properties of magnetism",
-  },
-  { word: "narrow", meaning: "of small width in relation to length" },
-  { word: "oasis", meaning: "a fertile spot in a desert where water is found" },
-  {
-    word: "package",
-    meaning: "an object or group of objects wrapped in paper or plastic",
-  },
-  { word: "quake", meaning: "shake or tremble" },
-  {
-    word: "radar",
-    meaning:
-      "a system for detecting the presence, direction, distance, and speed of aircraft",
-  },
-  {
-    word: "salary",
-    meaning:
-      "a fixed regular payment, typically paid on a monthly or biweekly basis",
-  },
-  {
-    word: "target",
-    meaning: "a person, object, or place selected as the aim of an attack",
-  },
-  {
-    word: "ultimate",
-    meaning: "being or happening at the end of a process; final",
-  },
-  {
-    word: "vaccine",
-    meaning: "a substance used to stimulate the production of antibodies",
-  },
-  {
-    word: "wage",
-    meaning:
-      "a fixed regular payment, typically paid on a daily or weekly basis",
-  },
-  {
-    word: "yacht",
-    meaning: "a medium-sized sailing boat equipped for cruising or racing",
-  },
-  {
-    word: "zoology",
-    meaning:
-      "the scientific study of the behavior, structure, physiology, classification, and distribution of animals",
-  },
-  { word: "accomplish", meaning: "achieve or complete successfully" },
-  { word: "bizarre", meaning: "very strange or unusual" },
-  {
-    word: "candidate",
-    meaning: "a person who applies for a job or is nominated for election",
-  },
-  { word: "debate", meaning: "a formal discussion on a particular topic" },
-  {
-    word: "effective",
-    meaning: "successful in producing a desired or intended result",
-  },
-  {
-    word: "facility",
-    meaning:
-      "a place, amenity, or piece of equipment provided for a particular purpose",
-  },
-  {
-    word: "gauge",
-    meaning: "estimate or determine the magnitude, amount, or volume of",
-  },
-  { word: "hollow", meaning: "having a hole or empty space inside" },
-  { word: "illegal", meaning: "contrary to or forbidden by law" },
-  {
-    word: "jealous",
-    meaning: "feeling or showing envy of someone or their achievements",
-  },
-  {
-    word: "knack",
-    meaning: "an acquired or natural skill at performing a task",
-  },
-  {
-    word: "label",
-    meaning:
-      "a small piece of paper, fabric, plastic, or similar material attached to an object",
-  },
-  { word: "manage", meaning: "be in charge of; administer" },
-  { word: "negotiate", meaning: "obtain or bring about by discussion" },
-  {
-    word: "obedient",
-    meaning: "complying or willing to comply with orders or requests",
-  },
-  {
-    word: "parade",
-    meaning:
-      "a public procession, especially one celebrating a special day or event",
-  },
-  {
-    word: "qualify",
-    meaning:
-      "be entitled to a particular benefit or privilege by fulfilling a necessary condition",
-  },
-  {
-    word: "radiant",
-    meaning: "sending out light; shining or glowing brightly",
-  },
+/**
+ * 100 WORD DATABASE (Split into 5 Difficulty Tiers)
+ * Each Tier has 20 words.
+ */
+const VOCAB_DATABASE = [
+  // LEVEL 1: Basic / Beginners
+  [
+    { word: "apple", meaning: "a red or green round fruit" },
+    { word: "book", meaning: "pages bound together to read" },
+    { word: "cat", meaning: "a small domesticated feline animal" },
+    { word: "dog", meaning: "a domesticated carnivorous mammal" },
+    { word: "happy", meaning: "feeling or showing pleasure" },
+    { word: "jump", meaning: "push oneself off a surface into the air" },
+    { word: "run", meaning: "move at a speed faster than a walk" },
+    { word: "school", meaning: "an institution for educating children" },
+    {
+      word: "teacher",
+      meaning: "a person who teaches, especially in a school",
+    },
+    {
+      word: "water",
+      meaning: "a colorless, transparent, odorless liquid",
+    },
+    { word: "sun", meaning: "the star around which the earth orbits" },
+    { word: "moon", meaning: "the natural satellite of the earth" },
+    { word: "tree", meaning: "a woody perennial plant" },
+    {
+      word: "friend",
+      meaning: "a person whom one knows and has a bond with",
+    },
+    { word: "house", meaning: "a building for human habitation" },
+    { word: "red", meaning: "the color of blood or fire" },
+    {
+      word: "big",
+      meaning: "of considerable size, extent, or intensity",
+    },
+    { word: "small", meaning: "of a size that is less than normal" },
+    { word: "eat", meaning: "put food into the mouth and swallow it" },
+    {
+      word: "sleep",
+      meaning: "a condition of body and mind giving rest",
+    },
+  ],
+  // LEVEL 2: Daily Life / Pre-Intermediate
+  [
+    {
+      word: "market",
+      meaning: "a place where people buy and sell goods",
+    },
+    {
+      word: "travel",
+      meaning: "make a journey, typically of some length",
+    },
+    {
+      word: "kitchen",
+      meaning: "a room where food is prepared and cooked",
+    },
+    {
+      word: "garden",
+      meaning: "a piece of ground for growing flowers or fruit",
+    },
+    { word: "doctor", meaning: "a qualified practitioner of medicine" },
+    {
+      word: "animal",
+      meaning: "a living organism that feeds on organic matter",
+    },
+    { word: "driver", meaning: "a person who drives a vehicle" },
+    { word: "finish", meaning: "bring a task or activity to an end" },
+    {
+      word: "start",
+      meaning: "begin or be reckoned from a particular point",
+    },
+    {
+      word: "money",
+      meaning: "a current medium of exchange in the form of coins",
+    },
+    { word: "clothes", meaning: "items worn to cover the body" },
+    { word: "music", meaning: "vocal or instrumental sounds combined" },
+    { word: "party", meaning: "a social gathering of invited guests" },
+    { word: "phone", meaning: "a device used for voice communication" },
+    { word: "watch", meaning: "look at or observe attentively" },
+    { word: "clean", meaning: "free from dirt, marks, or stains" },
+    {
+      word: "dirty",
+      meaning: "covered or marked with an unclean substance",
+    },
+    { word: "heavy", meaning: "of great weight; difficult to lift" },
+    { word: "light", meaning: "the natural agent that stimulates sight" },
+    {
+      word: "break",
+      meaning: "separate or cause to separate into pieces",
+    },
+  ],
+  // LEVEL 3: Nature & Feelings / Intermediate
+  [
+    { word: "brave", meaning: "ready to face and endure danger or pain" },
+    { word: "nervous", meaning: "easily agitated or alarmed" },
+    { word: "protect", meaning: "keep safe from harm or injury" },
+    { word: "nature", meaning: "the physical world collectively" },
+    {
+      word: "forest",
+      meaning: "a large area covered chiefly with trees",
+    },
+    { word: "island", meaning: "a piece of land surrounded by water" },
+    { word: "ocean", meaning: "a very large expanse of sea" },
+    { word: "planet", meaning: "a celestial body orbiting a star" },
+    { word: "recycle", meaning: "convert waste into reusable material" },
+    { word: "waste", meaning: "use or expend carelessly" },
+    {
+      word: "habit",
+      meaning: "a settled or regular tendency or practice",
+    },
+    {
+      word: "culture",
+      meaning: "the ideas, customs, and social behavior",
+    },
+    { word: "honest", meaning: "free of deceit and untruthfulness" },
+    {
+      word: "polite",
+      meaning: "having or showing behavior that is respectful",
+    },
+    { word: "danger", meaning: "the possibility of suffering harm" },
+    {
+      word: "safety",
+      meaning: "the condition of being protected from danger",
+    },
+    {
+      word: "energy",
+      meaning: "power derived from physical or chemical resources",
+    },
+    { word: "reduce", meaning: "make smaller or less in amount" },
+    { word: "clever", meaning: "quick to understand, learn, and devise" },
+    {
+      word: "angry",
+      meaning: "having a strong feeling of or showing annoyance",
+    },
+  ],
+  // LEVEL 4: Academic / Science / Upper-Intermediate
+  [
+    { word: "ancient", meaning: "belonging to the very distant past" },
+    {
+      word: "pollution",
+      meaning: "the presence of harmful substances in environment",
+    },
+    { word: "disaster", meaning: "a sudden event causing great damage" },
+    { word: "observe", meaning: "notice or perceive and register it" },
+    { word: "method", meaning: "a particular form of procedure" },
+    { word: "system", meaning: "a set of things working together" },
+    { word: "theory", meaning: "a supposition or a system of ideas" },
+    {
+      word: "virus",
+      meaning: "an infective agent that typically consists of nucleic acid",
+    },
+    {
+      word: "benefit",
+      meaning: "an advantage or profit gained from something",
+    },
+    {
+      word: "citizen",
+      meaning: "a legally recognized subject of a state",
+    },
+    {
+      word: "climate",
+      meaning: "the weather conditions prevailing in an area",
+    },
+    { word: "damage", meaning: "physical harm caused to something" },
+    {
+      word: "effect",
+      meaning: "a change that is a result or consequence",
+    },
+    { word: "global", meaning: "relating to the whole world" },
+    { word: "liquid", meaning: "a substance that flows freely" },
+    {
+      word: "native",
+      meaning: "associated with the place of one's birth",
+    },
+    {
+      word: "origin",
+      meaning: "the point or place where something begins",
+    },
+    { word: "public", meaning: "of or concerning the people as a whole" },
+    {
+      word: "region",
+      meaning: "an area or division, especially of a country",
+    },
+    { word: "unique", meaning: "being the only one of its kind" },
+  ],
+  // LEVEL 5: Advanced / Challenge
+  [
+    { word: "bizarre", meaning: "very strange or unusual" },
+    { word: "chaos", meaning: "complete disorder and confusion" },
+    {
+      word: "debate",
+      meaning: "a formal discussion on a particular topic",
+    },
+    { word: "economy", meaning: "the wealth and resources of a country" },
+    { word: "genre", meaning: "a category of artistic composition" },
+    { word: "hazard", meaning: "a danger or risk" },
+    { word: "ignite", meaning: "catch fire or cause to catch fire" },
+    {
+      word: "journey",
+      meaning: "an act of traveling from one place to another",
+    },
+    {
+      word: "knack",
+      meaning: "an acquired or natural skill at doing something",
+    },
+    {
+      word: "legacy",
+      meaning: "amount of money or property left to someone",
+    },
+    {
+      word: "myth",
+      meaning: "a traditional story explaining natural or social phenomenon",
+    },
+    {
+      word: "novel",
+      meaning: "a fictitious prose narrative of book length",
+    },
+    {
+      word: "oasis",
+      meaning: "a fertile spot in a desert where water is found",
+    },
+    { word: "plague", meaning: "a contagious bacterial disease" },
+    { word: "quest", meaning: "a long or arduous search for something" },
+    { word: "ritual", meaning: "a religious or solemn ceremony" },
+    { word: "scheme", meaning: "a large-scale systematic plan" },
+    {
+      word: "tactic",
+      meaning: "an action or strategy carefully planned",
+    },
+    {
+      word: "urban",
+      meaning: "in, relating to, or characteristic of a town or city",
+    },
+    {
+      word: "yield",
+      meaning:
+        "produce or provide a natural, agricultural, or industrial product",
+    },
+  ],
 ];
 
-// 2. ENGINE CONSTANTS
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 450;
+
+// Physics Constants
 const GRAVITY = 0.6;
 const FRICTION = 0.8;
-const PLAYER_SPEED = 5;
-const JUMP_FORCE = 12;
+const JUMP_FORCE = 13.5; // Increased slightly from 12 to make recovery easier
 
-// 3. GAME STATE
-let canvas, ctx;
-let gameState = "START";
+/**
+ * GAME STATE
+ */
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let gameState = "START"; // START, PLAYING, QUIZ, LEVEL_COMPLETE, GAMEOVER, WIN
 let score = 0;
 let lives = 3;
-let currentQuizCoin = null;
-let camera = { x: 0, y: 0 };
+let currentLevel = 1;
+let keys = { ArrowRight: false, ArrowLeft: false, ArrowUp: false };
 
-// Input state
-const keys = {
-  ArrowUp: false,
-  ArrowDown: false,
-  ArrowLeft: false,
-  ArrowRight: false,
-};
+// Camera
+let camera = { x: 0, y: 0 };
 
 // Entities
 let player = {};
 let platforms = [];
 let coins = [];
 let enemies = [];
-let activeVocabList = []; // The specific words chosen for this round
+let currentQuizCoin = null;
 
-// IMAGE ASSETS
-const playerSprite = new Image();
-
-// =========================================================
-// ↓↓↓ CHANGE THIS LINE TO YOUR IMAGE FILENAME ↓↓↓
-playerSprite.src = "";
-// Example: playerSprite.src = "my-hero.png";
-// =========================================================
-
-// --- INITIALIZATION ---
-window.onload = function () {
-  canvas = document.getElementById("gameCanvas");
-  ctx = canvas.getContext("2d");
-
-  // Handle High DPI
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = CANVAS_WIDTH * dpr;
-  canvas.height = CANVAS_HEIGHT * dpr;
-  ctx.scale(dpr, dpr);
-  canvas.style.width = CANVAS_WIDTH + "px";
-  canvas.style.height = CANVAS_HEIGHT + "px";
-
-  setupInputs();
-  gameLoop();
-};
-
-// --- PROCEDURAL LEVEL GENERATION ---
-function resetGame() {
-  score = 0;
-  lives = 3;
-  camera.x = 0;
-  updateHUD();
-
-  // 1. Pick 20 Random Words from the full list
-  // Shuffle array algorithm (Fisher-Yates)
-  const shuffled = [...FULL_VOCAB_LIST].sort(() => 0.5 - Math.random());
-  activeVocabList = shuffled.slice(0, 20); // Play with 20 words
-
-  // 2. Setup Player
-  player = {
-    x: 50,
-    y: 300,
-    width: 30,
-    height: 40,
-    vx: 0,
-    vy: 0,
-    grounded: false,
-    invulnerable: 0,
-    color: "#FF9800",
-  };
-
-  platforms = [];
-  coins = [];
-  enemies = [];
-
-  // 3. Generate Map based on Active Words
-  let currentX = 0;
-
-  // Starting platform
-  platforms.push({ x: 0, y: 350, w: 500, h: 50 });
-  currentX += 500;
-
-  // Loop through each word and create a section for it
-  activeVocabList.forEach((wordObj, index) => {
-    // Gap between platforms (jump distance)
-    // Min 80, Max 180 (doable)
-    const gap = 80 + Math.random() * 80;
-    currentX += gap;
-
-    // Platform Height (Y)
-    // Keep it somewhat level but varying.
-    // 200 is high, 350 is low.
-    const platY = 220 + Math.random() * 130;
-    const platW = 150 + Math.random() * 150; // Width
-
-    platforms.push({ x: currentX, y: platY, w: platW, h: 20 });
-
-    // Add Coin on this platform
-    // Center it roughly
-    coins.push({
-      x: currentX + platW / 2 - 15,
-      y: platY - 60, // Floating above
-      w: 30,
-      h: 30,
-      wordData: wordObj,
-      collected: false,
-      floatOffset: Math.random() * Math.PI * 2,
-    });
-
-    // Add Enemy? (30% chance)
-    if (Math.random() > 0.7 && platW > 100) {
-      enemies.push({
-        x: currentX + 30,
-        y: platY - 30,
-        w: 30,
-        h: 30,
-        minX: currentX,
-        maxX: currentX + platW - 30,
-        speed: 2,
-        dir: 1,
-      });
-    }
-
-    currentX += platW;
-  });
-
-  // Final Platform
-  currentX += 100;
-  platforms.push({ x: currentX, y: 350, w: 600, h: 50 });
-}
-
-function setupInputs() {
+/**
+ * INITIALIZATION
+ */
+function init() {
   window.addEventListener("keydown", (e) => {
     if (keys.hasOwnProperty(e.code)) keys[e.code] = true;
     if (e.code === "ArrowUp" && gameState === "PLAYING" && player.grounded) {
@@ -463,141 +286,389 @@ function setupInputs() {
   window.addEventListener("keyup", (e) => {
     if (keys.hasOwnProperty(e.code)) keys[e.code] = false;
   });
-}
 
-window.simulateKey = function (code, isDown) {
-  if (keys.hasOwnProperty(code)) keys[code] = isDown;
-  if (
-    code === "ArrowUp" &&
-    isDown &&
-    gameState === "PLAYING" &&
-    player.grounded
-  ) {
-    player.vy = -JUMP_FORCE;
-    player.grounded = false;
-  }
-};
-
-function startGame() {
-  document.getElementById("start-screen").classList.remove("active");
-  document.getElementById("end-screen").classList.remove("active");
-  resetGame();
-  gameState = "PLAYING";
-}
-
-function restartGame() {
-  startGame();
-}
-
-// --- GAME LOOP ---
-function gameLoop() {
-  if (gameState === "PLAYING") {
-    update();
-  }
-  draw();
   requestAnimationFrame(gameLoop);
 }
 
-// --- UPDATE LOGIC ---
+function startGame(level) {
+  if (level === 1) {
+    score = 0;
+    lives = 3;
+  }
+  currentLevel = level;
+  gameState = "PLAYING";
+  updateHUD();
+
+  // Hide Screens
+  document
+    .querySelectorAll(".screen")
+    .forEach((el) => el.classList.remove("active"));
+  document.getElementById("quiz-modal").classList.remove("active");
+
+  // Build Level Procedurally
+  buildLevel(currentLevel);
+}
+
+function nextLevel() {
+  if (currentLevel < 5) {
+    startGame(currentLevel + 1);
+  } else {
+    endGame(true); // Game totally finished
+  }
+}
+
+// --- PROCEDURAL LEVEL GENERATOR ---
+function buildLevel(level) {
+  camera.x = 0;
+
+  // Player Setup
+  player = {
+    x: 50,
+    y: 300,
+    w: 30,
+    h: 40,
+    vx: 0,
+    vy: 0,
+    color: "#FF9800",
+    grounded: false,
+    invulnerable: 0,
+  };
+
+  platforms = [];
+  coins = [];
+  enemies = [];
+
+  // 1. Ground Floor (spans the whole estimated length)
+  // Length = roughly 20 words * 300px spacing = 6000px
+  platforms.push({ x: -100, y: 400, w: 10000, h: 100 });
+
+  // 2. Initial Platform
+  let currentX = 0;
+  platforms.push({ x: 0, y: 350, w: 400, h: 20 });
+  currentX = 400;
+
+  // 3. Get Words for this level
+  const levelWords = VOCAB_DATABASE[level - 1]; // Array of 20 words
+
+  // 4. Generate Platforms & Coins for each word
+  levelWords.forEach((wordObj, i) => {
+    // Randomize Gap (Difficulty increases slightly by level)
+    const gap = 80 + Math.random() * (50 + level * 10);
+    currentX += gap;
+
+    // Platform Height
+    // Adjusted logic to keep platforms reachable from ground if needed
+    // Platforms clamped between Y=250 and Y=370 (Screen bottom is 450, ground at 400)
+    const heightVar = level * 30 + 50;
+    const yPos = 280 + (Math.random() * heightVar - heightVar / 2);
+    // Clamp Y to stay reachable from ground
+    const safeY = Math.max(250, Math.min(yPos, 370));
+
+    const pWidth = 120 + Math.random() * 100;
+
+    platforms.push({ x: currentX, y: safeY, w: pWidth, h: 20 });
+
+    // Place Coin in center of platform
+    // LOWERED COIN: Now floats at safeY - 30 instead of -50
+    coins.push({
+      x: currentX + pWidth / 2 - 12,
+      y: safeY - 30,
+      w: 25,
+      h: 25,
+      wordData: wordObj,
+      collected: false,
+    });
+
+    // Place Enemy?
+    // Chance increases with level (Level 1: 30%, Level 5: 70%)
+    const enemyChance = 0.2 + level * 0.1;
+    if (Math.random() < enemyChance) {
+      // Determine if enemy is on ground or platform
+      const onGround = Math.random() > 0.5;
+      if (onGround) {
+        enemies.push({
+          x: currentX,
+          y: 370,
+          w: 30,
+          h: 30,
+          minX: currentX,
+          maxX: currentX + pWidth,
+          vx: 2 + level * 0.2, // Faster in later levels
+          color: "#f44336",
+        });
+      } else {
+        enemies.push({
+          x: currentX + 20,
+          y: safeY - 30,
+          w: 30,
+          h: 30,
+          minX: currentX,
+          maxX: currentX + pWidth,
+          vx: 2,
+          color: "#f44336",
+        });
+      }
+    }
+
+    currentX += pWidth;
+  });
+
+  // End Platform
+  currentX += 100;
+  platforms.push({ x: currentX, y: 350, w: 500, h: 20 });
+}
+
+/**
+ * GAME LOOP
+ */
+function gameLoop() {
+  if (gameState === "PLAYING") {
+    update();
+    draw();
+  }
+  requestAnimationFrame(gameLoop);
+}
+
 function update() {
-  // 1. Player X
+  // Movement
   if (keys.ArrowRight) player.vx += 1;
   if (keys.ArrowLeft) player.vx -= 1;
   player.vx *= FRICTION;
+  player.vy += GRAVITY;
   player.x += player.vx;
 
-  // Wall collisions
+  // H-Collision
   platforms.forEach((plat) => {
-    if (colCheck(player, plat) === "l" || colCheck(player, plat) === "r") {
-      player.vx = 0;
-    }
+    const dir = colCheck(player, plat);
+    if (dir === "l" || dir === "r") player.vx = 0;
   });
 
-  // Level Bounds (Dynamic based on last platform)
-  const levelEnd =
-    platforms[platforms.length - 1].x + platforms[platforms.length - 1].w;
-  if (player.x < 0) {
-    player.x = 0;
-    player.vx = 0;
-  }
-  if (player.x > levelEnd) {
-    player.x = levelEnd;
-    player.vx = 0;
-  }
-
-  // 2. Player Y
-  player.vy += GRAVITY;
   player.y += player.vy;
   player.grounded = false;
 
+  // V-Collision
   platforms.forEach((plat) => {
     const dir = colCheck(player, plat);
     if (dir === "b") {
       player.grounded = true;
       player.vy = 0;
     } else if (dir === "t") {
-      player.vy *= -0.5;
+      player.vy *= -1;
     }
   });
 
-  // 3. Camera (Clamp to world size)
-  let targetCamX = player.x - CANVAS_WIDTH / 2;
-  targetCamX = Math.max(0, Math.min(targetCamX, levelEnd - CANVAS_WIDTH));
-  camera.x += (targetCamX - camera.x) * 0.1;
+  // Pit Death
+  if (player.y > CANVAS_HEIGHT + 100) takeDamage(true);
 
-  // 4. Entities
+  // Camera
+  camera.x = player.x - CANVAS_WIDTH / 2;
+  if (camera.x < 0) camera.x = 0;
+
+  // Interactions
   coins.forEach((coin) => {
-    if (!coin.collected) {
-      coin.floatOffset += 0.1;
-      if (simpleCol(player, coin)) triggerQuiz(coin);
+    if (!coin.collected && checkCollision(player, coin)) {
+      startQuiz(coin);
     }
   });
 
   enemies.forEach((enemy) => {
-    enemy.x += enemy.speed * enemy.dir;
-    if (enemy.x > enemy.maxX || enemy.x < enemy.minX) enemy.dir *= -1;
-    if (player.invulnerable === 0 && simpleCol(player, enemy)) takeDamage();
+    enemy.x += enemy.vx;
+    if (enemy.x > enemy.maxX || enemy.x < enemy.minX) enemy.vx *= -1;
+    if (player.invulnerable <= 0 && checkCollision(player, enemy)) {
+      takeDamage();
+    }
   });
 
   if (player.invulnerable > 0) player.invulnerable--;
 
-  // 5. Win/Loss
-  const allCollected = coins.every((c) => c.collected);
-  if (allCollected && coins.length > 0) endGame(true);
-
-  if (player.y > CANVAS_HEIGHT + 200) takeDamage(true);
+  // Level Completion Check
+  const remaining = coins.filter((c) => !c.collected).length;
+  if (remaining === 0) {
+    if (currentLevel === 5) {
+      endGame(true);
+    } else {
+      levelComplete();
+    }
+  }
 }
 
-function takeDamage(respawn = false) {
+function draw() {
+  ctx.fillStyle = "#87CEEB";
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  ctx.save();
+  ctx.translate(-camera.x, 0);
+
+  // Platforms
+  ctx.fillStyle = "#795548";
+  platforms.forEach((p) => {
+    ctx.fillRect(p.x, p.y, p.w, p.h);
+    ctx.fillStyle = "#4CAF50";
+    ctx.fillRect(p.x, p.y, p.w, 5);
+    ctx.fillStyle = "#795548";
+  });
+
+  // Coins
+  ctx.fillStyle = "#FFD700";
+  ctx.strokeStyle = "#DAA520";
+  ctx.lineWidth = 2;
+  coins.forEach((c) => {
+    if (!c.collected) {
+      ctx.beginPath();
+      ctx.arc(c.x + c.w / 2, c.y + c.h / 2, 12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 16px Arial";
+      ctx.fillText("?", c.x + 9, c.y + 18);
+      ctx.fillStyle = "#FFD700";
+    }
+  });
+
+  // Enemies
+  enemies.forEach((e) => {
+    ctx.fillStyle = e.color;
+    ctx.beginPath();
+    ctx.moveTo(e.x, e.y + e.h);
+    ctx.lineTo(e.x + e.w / 2, e.y);
+    ctx.lineTo(e.x + e.w, e.y + e.h);
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(e.x + 5, e.y + 10, 5, 5);
+    ctx.fillRect(e.x + 20, e.y + 10, 5, 5);
+  });
+
+  // Player
+  if (player.invulnerable % 10 < 5) {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+    ctx.fillStyle = "#fff";
+    let eyeX = player.vx >= 0 ? 18 : 4;
+    ctx.fillRect(player.x + eyeX, player.y + 8, 5, 5);
+  }
+
+  ctx.restore();
+}
+
+/**
+ * QUIZ & UI LOGIC
+ */
+function startQuiz(coin) {
+  gameState = "QUIZ";
+  currentQuizCoin = coin;
+
+  const modal = document.getElementById("quiz-modal");
+  const wordText = document.getElementById("quiz-word-text");
+  const optionsDiv = document.getElementById("quiz-options");
+
+  wordText.innerText = coin.wordData.word;
+  optionsDiv.innerHTML = "";
+
+  // 1. Correct Answer
+  let answers = [{ text: coin.wordData.meaning, correct: true }];
+
+  // 2. Wrong Answers (Pull randomly from entire DB, excluding current)
+  // Flatten DB for distractor selection
+  const allWords = VOCAB_DATABASE.flat();
+  let otherWords = allWords.filter((w) => w.word !== coin.wordData.word);
+  otherWords.sort(() => Math.random() - 0.5);
+
+  otherWords.slice(0, 3).forEach((w) => {
+    answers.push({ text: w.meaning, correct: false });
+  });
+
+  answers.sort(() => Math.random() - 0.5);
+
+  answers.forEach((ans) => {
+    const btn = document.createElement("div");
+    btn.className = "option-btn";
+    btn.innerText = ans.text;
+    btn.onclick = () => handleAnswer(ans.correct);
+    optionsDiv.appendChild(btn);
+  });
+
+  modal.classList.add("active");
+  draw();
+}
+
+function handleAnswer(isCorrect) {
+  document.getElementById("quiz-modal").classList.remove("active");
+
+  if (isCorrect) {
+    score += 10;
+    currentQuizCoin.collected = true;
+    updateHUD();
+  } else {
+    lives--;
+    updateHUD();
+    player.vx = -10;
+    player.vy = -5;
+    player.invulnerable = 60;
+    if (lives <= 0) {
+      endGame(false);
+      return;
+    }
+  }
+  gameState = "PLAYING";
+}
+
+function levelComplete() {
+  gameState = "LEVEL_COMPLETE";
+  document.getElementById("level-complete-screen").classList.add("active");
+}
+
+function updateHUD() {
+  document.getElementById("score-display").innerText = `Score: ${score}`;
+  document.getElementById("level-display").innerText = `Level ${currentLevel}`;
+  let hearts = "❤️".repeat(Math.max(0, lives));
+  document.getElementById("lives-display").innerText = `Lives: ${hearts}`;
+}
+
+function takeDamage(resetPos = false) {
   lives--;
   updateHUD();
-  player.vy = -8;
   player.invulnerable = 60;
+  player.vy = -5;
 
-  if (respawn) {
-    // Find nearest platform to respawn safely
-    // Simple approach: go back to start for now, or last grounded x
-    player.x = Math.max(0, player.x - 200);
-    player.y = 200;
+  if (resetPos) {
+    player.x -= 100;
+    player.y = 300;
+    player.vx = 0;
+    if (player.x < 0) player.x = 50;
   }
 
   if (lives <= 0) endGame(false);
 }
 
-function simpleCol(rect1, rect2) {
+function endGame(win) {
+  gameState = win ? "WIN" : "GAMEOVER";
+  if (win) {
+    document.getElementById("win-screen").classList.add("active");
+    document.getElementById(
+      "final-score-win"
+    ).innerText = `Final Score: ${score}`;
+  } else {
+    document.getElementById("game-over-screen").classList.add("active");
+    document.getElementById(
+      "final-score-lose"
+    ).innerText = `Final Score: ${score}`;
+  }
+}
+
+// Collision Utils
+function checkCollision(r1, r2) {
   return (
-    rect1.x < rect2.x + rect2.w &&
-    rect1.x + rect1.width > rect2.x &&
-    rect1.y < rect2.y + rect2.h &&
-    rect1.y + rect1.height > rect2.y
+    r1.x < r2.x + r2.w &&
+    r1.x + r1.w > r2.x &&
+    r1.y < r2.y + r2.h &&
+    r1.y + r1.h > r2.y
   );
 }
 
 function colCheck(shapeA, shapeB) {
-  let vX = shapeA.x + shapeA.width / 2 - (shapeB.x + shapeB.w / 2),
-    vY = shapeA.y + shapeA.height / 2 - (shapeB.y + shapeB.h / 2),
-    hWidths = shapeA.width / 2 + shapeB.w / 2,
-    hHeights = shapeA.height / 2 + shapeB.h / 2,
+  let vX = shapeA.x + shapeA.w / 2 - (shapeB.x + shapeB.w / 2),
+    vY = shapeA.y + shapeA.h / 2 - (shapeB.y + shapeB.h / 2),
+    hWidths = shapeA.w / 2 + shapeB.w / 2,
+    hHeights = shapeA.h / 2 + shapeB.h / 2,
     colDir = null;
 
   if (Math.abs(vX) < hWidths && Math.abs(vY) < hHeights) {
@@ -624,154 +695,4 @@ function colCheck(shapeA, shapeB) {
   return colDir;
 }
 
-// --- QUIZ LOGIC ---
-function triggerQuiz(coin) {
-  gameState = "QUIZ";
-  currentQuizCoin = coin;
-
-  const modal = document.getElementById("quiz-modal");
-  const wordEl = document.getElementById("quiz-word");
-  const optionsContainer = document.getElementById("quiz-options");
-
-  wordEl.innerText = coin.wordData.word.toUpperCase();
-  optionsContainer.innerHTML = "";
-
-  let answers = [];
-  answers.push({ text: coin.wordData.meaning, correct: true });
-
-  // Pick 2 random wrong answers from the FULL list (excluding current word)
-  let otherWords = FULL_VOCAB_LIST.filter((w) => w.word !== coin.wordData.word);
-  otherWords.sort(() => Math.random() - 0.5);
-  answers.push({ text: otherWords[0].meaning, correct: false });
-  answers.push({ text: otherWords[1].meaning, correct: false });
-
-  answers.sort(() => Math.random() - 0.5);
-
-  answers.forEach((ans) => {
-    const btn = document.createElement("button");
-    btn.className = "quiz-btn";
-    btn.innerText = ans.text;
-    btn.onclick = () => handleQuizAnswer(ans.correct);
-    optionsContainer.appendChild(btn);
-  });
-
-  modal.classList.add("active");
-}
-
-function handleQuizAnswer(isCorrect) {
-  const modal = document.getElementById("quiz-modal");
-  modal.classList.remove("active");
-
-  if (isCorrect) {
-    score += 10;
-    currentQuizCoin.collected = true;
-  } else {
-    lives--;
-    updateHUD();
-    player.x -= 30;
-    player.vx = -5;
-    if (lives <= 0) {
-      endGame(false);
-      return;
-    }
-  }
-  updateHUD();
-  gameState = "PLAYING";
-}
-
-// --- DRAWING ---
-function draw() {
-  ctx.fillStyle = "#87CEEB";
-  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-  ctx.save();
-  ctx.translate(-camera.x, -camera.y);
-
-  platforms.forEach((plat) => {
-    ctx.fillStyle = "#795548";
-    ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
-    ctx.fillStyle = "#4CAF50";
-    ctx.fillRect(plat.x, plat.y, plat.w, 5);
-  });
-
-  ctx.font = "20px Arial";
-  ctx.textAlign = "center";
-  coins.forEach((coin) => {
-    if (!coin.collected) {
-      const bounce = Math.sin(coin.floatOffset) * 5;
-      ctx.fillStyle = "#FFD700";
-      ctx.beginPath();
-      ctx.arc(
-        coin.x + coin.w / 2,
-        coin.y + coin.h / 2 + bounce,
-        15,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "#DAA520";
-      ctx.stroke();
-
-      ctx.fillStyle = "#000";
-      ctx.fillText("?", coin.x + coin.w / 2, coin.y + coin.h / 2 + 7 + bounce);
-    }
-  });
-
-  enemies.forEach((en) => {
-    ctx.fillStyle = "#f44336";
-    ctx.beginPath();
-    ctx.moveTo(en.x, en.y + en.h);
-    ctx.lineTo(en.x + en.w / 2, en.y);
-    ctx.lineTo(en.x + en.w, en.y + en.h);
-    ctx.fill();
-    ctx.fillStyle = "white";
-    ctx.fillRect(en.x + 5, en.y + 10, 5, 5);
-    ctx.fillRect(en.x + 20, en.y + 10, 5, 5);
-  });
-
-  if (player.invulnerable % 10 < 5) {
-    if (playerSprite.complete && playerSprite.naturalHeight !== 0) {
-      ctx.drawImage(
-        playerSprite,
-        player.x,
-        player.y,
-        player.width,
-        player.height
-      );
-    } else {
-      ctx.fillStyle = player.color;
-      ctx.fillRect(player.x, player.y, player.width, player.height);
-      ctx.fillStyle = "white";
-      const eyeOffset = player.vx >= 0 ? 18 : 2;
-      ctx.fillRect(player.x + eyeOffset, player.y + 8, 8, 8);
-    }
-  }
-
-  ctx.restore();
-}
-
-function updateHUD() {
-  document.getElementById("score-display").innerText = "Score: " + score;
-  let hearts = "";
-  for (let i = 0; i < lives; i++) hearts += "❤️";
-  document.getElementById("lives-display").innerText = "Lives: " + hearts;
-}
-
-function endGame(win) {
-  gameState = win ? "WIN" : "GAMEOVER";
-  const endScreen = document.getElementById("end-screen");
-  const title = document.getElementById("end-title");
-  const msg = document.getElementById("end-message");
-
-  endScreen.classList.add("active");
-  if (win) {
-    title.innerText = "YOU WIN!";
-    title.style.color = "#4CAF50";
-    msg.innerText = `You collected all words! Final Score: ${score}`;
-  } else {
-    title.innerText = "GAME OVER";
-    title.style.color = "#f44336";
-    msg.innerText = `Better luck next time! Final Score: ${score}`;
-  }
-}
+init();
