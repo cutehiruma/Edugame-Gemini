@@ -796,31 +796,18 @@
           // Chance increases with level (Level 1: 30%, Level 5: 70%)
           const enemyChance = 0.2 + level * 0.1;
           if (Math.random() < enemyChance) {
-            // Determine if enemy is on ground or platform
-            const onGround = Math.random() > 0.5;
-            if (onGround) {
-              enemies.push({
-                x: currentX,
-                y: 370,
-                w: 30,
-                h: 30,
-                minX: currentX,
-                maxX: currentX + pWidth,
-                vx: 2 + level * 0.2, // Faster in later levels
-                color: "#f44336",
-              });
-            } else {
-              enemies.push({
-                x: currentX + 20,
-                y: safeY - 30,
-                w: 30,
-                h: 30,
-                minX: currentX,
-                maxX: currentX + pWidth,
-                vx: 2,
-                color: "#f44336",
-              });
-            }
+            // MODIFIED: FORCE ENEMIES TO BE ON THE GROUND FLOOR ONLY
+            // Fixed Y position for ground enemies (Ground is at 400, Enemy Height is 30, so 400-30=370)
+            enemies.push({
+              x: currentX,
+              y: 370,
+              w: 30,
+              h: 30,
+              minX: currentX,
+              maxX: currentX + pWidth,
+              vx: 2 + level * 0.2, // Faster in later levels
+              color: "#f44336",
+            });
           }
 
           currentX += pWidth;
