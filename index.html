@@ -85,6 +85,9 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         max-width: 80%;
         width: 500px;
+        /* Tambahkan ini agar layar start/game over juga aman di landscape */
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       .screen.active {
@@ -151,6 +154,9 @@
         pointer-events: auto;
         display: none;
         box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5); /* Dim background */
+        /* Tambahan agar tidak keluar layar secara umum */
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       #quiz-modal.active {
@@ -231,17 +237,51 @@
       }
 
       /* --- MOBILE LANDSCAPE TWEAKS --- */
-      /* Jika tinggi layar kurang dari 500px (biasanya landscape HP), naikkan posisi tombol */
+      /* Jika tinggi layar kurang dari 500px (biasanya landscape HP) */
       @media (max-height: 500px) and (orientation: landscape) {
+        /* Kontrol Sentuh */
         #touch-controls {
-          bottom: 40px; /* Naikkan lebih ke atas */
-          padding: 0 40px; /* Geser sedikit ke tengah */
+          bottom: 40px;
+          padding: 0 40px;
         }
 
         .touch-btn {
-          width: 55px; /* Sedikit lebih kecil agar tidak menghalangi */
+          width: 55px;
           height: 55px;
           font-size: 24px;
+        }
+
+        /* Perbaikan Tampilan Modal (Soal) agar muat */
+        #quiz-modal {
+          padding: 10px 20px;
+          max-height: 85vh; /* Batasi tinggi maksimal */
+          overflow-y: auto; /* Scroll jika konten kepanjangan */
+        }
+
+        .quiz-word {
+          font-size: 1.5rem; /* Kecilkan font kata */
+          margin: 5px 0;
+        }
+
+        .options-grid {
+          /* Ubah jadi 2 kolom agar hemat tempat vertikal */
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          margin-top: 10px;
+        }
+
+        .option-btn {
+          padding: 8px 12px; /* Kecilkan padding tombol */
+          font-size: 0.9rem; /* Kecilkan font opsi */
+        }
+
+        h2 {
+          font-size: 1.2rem;
+          margin: 5px 0;
+        }
+
+        p {
+          margin: 5px 0;
         }
       }
     </style>
