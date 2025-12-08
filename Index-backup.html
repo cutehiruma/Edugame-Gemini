@@ -191,15 +191,14 @@
       /* --- TOUCH CONTROLS --- */
       #touch-controls {
         position: absolute;
-        bottom: 15px; /* Slightly lower to ensure visibility */
+        bottom: 20px;
         left: 0;
         width: 100%;
-        height: 70px; /* Fixed height container */
+        height: 70px;
         pointer-events: none;
-        /* Hidden by default, shown via JS */
         display: none;
         justify-content: space-between;
-        padding: 0 15px;
+        padding: 0 20px;
         box-sizing: border-box;
         z-index: 20;
       }
@@ -207,17 +206,17 @@
       .control-group {
         pointer-events: auto;
         display: flex;
-        gap: 15px;
+        gap: 20px;
       }
 
       .touch-btn {
-        width: 60px; /* Slightly smaller for better landscape fit */
-        height: 60px;
+        width: 65px;
+        height: 65px;
         background: rgba(255, 255, 255, 0.3);
         border: 2px solid rgba(255, 255, 255, 0.6);
         border-radius: 50%;
         color: white;
-        font-size: 28px;
+        font-size: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -229,6 +228,21 @@
       .touch-btn:active {
         background: rgba(255, 255, 255, 0.6);
         transform: scale(0.95);
+      }
+
+      /* --- MOBILE LANDSCAPE TWEAKS --- */
+      /* Jika tinggi layar kurang dari 500px (biasanya landscape HP), naikkan posisi tombol */
+      @media (max-height: 500px) and (orientation: landscape) {
+        #touch-controls {
+          bottom: 40px; /* Naikkan lebih ke atas */
+          padding: 0 40px; /* Geser sedikit ke tengah */
+        }
+
+        .touch-btn {
+          width: 55px; /* Sedikit lebih kecil agar tidak menghalangi */
+          height: 55px;
+          font-size: 24px;
+        }
       }
     </style>
   </head>
