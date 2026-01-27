@@ -1,6 +1,5 @@
 /**
- * 100 WORD DATABASE (Split into 5 Difficulty Tiers)
- * Each Tier has 20 words.
+ * 100 WORD DATABASE
  */
 const VOCAB_DATABASE = [
   // LEVEL 1: Basic / Beginners
@@ -243,28 +242,22 @@ const VOCAB_DATABASE = [
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 450;
-
-// Physics Constants
 const GRAVITY = 0.6;
 const FRICTION = 0.8;
-const JUMP_FORCE = 13.5; // Increased slightly from 12 to make recovery easier
+const JUMP_FORCE = 13.5;
 
-/**
- * GAME STATE
- */
+// GAME STATE
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let gameState = "START"; // START, PLAYING, QUIZ, LEVEL_COMPLETE, GAMEOVER, WIN
+let gameState = "NAME"; // Started at name screen
 let score = 0;
 let lives = 3;
 let currentLevel = 1;
+let playerName = ""; // Store player name
 let keys = { ArrowRight: false, ArrowLeft: false, ArrowUp: false };
 
-// Camera
 let camera = { x: 0, y: 0 };
-
-// Entities
 let player = {};
 let platforms = [];
 let coins = [];
@@ -291,6 +284,7 @@ function init() {
   // Touch Controls
   setupTouchControls();
 
+  // Start Loop
   requestAnimationFrame(gameLoop);
 }
 
@@ -316,7 +310,6 @@ function setupTouchControls() {
   attachTouch("btn-left", "ArrowLeft");
   attachTouch("btn-right", "ArrowRight");
 
-  // Jump button needs special logic to trigger velocity
   const jumpBtn = document.getElementById("btn-jump");
   const jumpPress = (e) => {
     e.preventDefault();
@@ -338,6 +331,23 @@ function setupTouchControls() {
   jumpBtn.addEventListener("mouseleave", jumpRelease);
 }
 
+// --- NAME SUBMISSION LOGIC ---
+function submitName() {
+  const input = document.getElementById("player-name-input");
+  const name = input.value.trim();
+  if (name) {
+    playerName = name;
+    // Hide Name Screen, Show Start Screen
+    document.getElementById("name-screen").classList.remove("active");
+    document.getElementById("start-screen").classList.add("active");
+
+    // Update personalized greeting
+    document.getElementById("display-name-start").innerText = playerName;
+  } else {
+    alert("Silakan isi nama kamu dulu ya!");
+  }
+}
+
 function startGame(level) {
   if (level === 1) {
     score = 0;
@@ -356,7 +366,7 @@ function startGame(level) {
   // Show Touch Controls
   document.getElementById("touch-controls").style.display = "flex";
 
-  // Build Level Procedurally
+  // Build Level
   buildLevel(currentLevel);
 }
 
@@ -364,15 +374,12 @@ function nextLevel() {
   if (currentLevel < 5) {
     startGame(currentLevel + 1);
   } else {
-    endGame(true); // Game totally finished
+    endGame(true);
   }
 }
 
-// --- PROCEDURAL LEVEL GENERATOR ---
 function buildLevel(level) {
   camera.x = 0;
-
-  // Player Setup
   player = {
     x: 50,
     y: 300,
@@ -389,38 +396,25 @@ function buildLevel(level) {
   coins = [];
   enemies = [];
 
-  // 1. Ground Floor (spans the whole estimated length)
-  // Length = roughly 20 words * 300px spacing = 6000px
+  // Ground Floor
   platforms.push({ x: -100, y: 400, w: 10000, h: 100 });
-
-  // 2. Initial Platform
-  let currentX = 0;
+  // Initial Platform
+  let currentX = 400;
   platforms.push({ x: 0, y: 350, w: 400, h: 20 });
-  currentX = 400;
 
-  // 3. Get Words for this level
-  const levelWords = VOCAB_DATABASE[level - 1]; // Array of 20 words
+  const levelWords = VOCAB_DATABASE[level - 1];
 
-  // 4. Generate Platforms & Coins for each word
   levelWords.forEach((wordObj, i) => {
-    // Randomize Gap (Difficulty increases slightly by level)
     const gap = 80 + Math.random() * (50 + level * 10);
     currentX += gap;
 
-    // Platform Height
-    // Adjusted logic to keep platforms reachable from ground if needed
-    // Platforms clamped between Y=250 and Y=370 (Screen bottom is 450, ground at 400)
     const heightVar = level * 30 + 50;
     const yPos = 280 + (Math.random() * heightVar - heightVar / 2);
-    // Clamp Y to stay reachable from ground
     const safeY = Math.max(250, Math.min(yPos, 370));
-
     const pWidth = 120 + Math.random() * 100;
 
     platforms.push({ x: currentX, y: safeY, w: pWidth, h: 20 });
 
-    // Place Coin in center of platform
-    // LOWERED COIN: Now floats at safeY - 30 instead of -50
     coins.push({
       x: currentX + pWidth / 2 - 12,
       y: safeY - 30,
@@ -430,12 +424,9 @@ function buildLevel(level) {
       collected: false,
     });
 
-    // Place Enemy?
-    // Chance increases with level (Level 1: 30%, Level 5: 70%)
+    // Enemies ONLY on Ground (y=370)
     const enemyChance = 0.2 + level * 0.1;
     if (Math.random() < enemyChance) {
-      // MODIFIED: FORCE ENEMIES TO BE ON THE GROUND FLOOR ONLY
-      // Fixed Y position for ground enemies (Ground is at 400, Enemy Height is 30, so 400-30=370)
       enemies.push({
         x: currentX,
         y: 370,
@@ -443,11 +434,10 @@ function buildLevel(level) {
         h: 30,
         minX: currentX,
         maxX: currentX + pWidth,
-        vx: 2 + level * 0.2, // Faster in later levels
+        vx: 2 + level * 0.2,
         color: "#f44336",
       });
     }
-
     currentX += pWidth;
   });
 
@@ -456,9 +446,6 @@ function buildLevel(level) {
   platforms.push({ x: currentX, y: 350, w: 500, h: 20 });
 }
 
-/**
- * GAME LOOP
- */
 function gameLoop() {
   if (gameState === "PLAYING") {
     update();
@@ -468,14 +455,12 @@ function gameLoop() {
 }
 
 function update() {
-  // Movement
   if (keys.ArrowRight) player.vx += 1;
   if (keys.ArrowLeft) player.vx -= 1;
   player.vx *= FRICTION;
   player.vy += GRAVITY;
   player.x += player.vx;
 
-  // H-Collision
   platforms.forEach((plat) => {
     const dir = colCheck(player, plat);
     if (dir === "l" || dir === "r") player.vx = 0;
@@ -484,7 +469,6 @@ function update() {
   player.y += player.vy;
   player.grounded = false;
 
-  // V-Collision
   platforms.forEach((plat) => {
     const dir = colCheck(player, plat);
     if (dir === "b") {
@@ -495,14 +479,11 @@ function update() {
     }
   });
 
-  // Pit Death
   if (player.y > CANVAS_HEIGHT + 100) takeDamage(true);
 
-  // Camera
   camera.x = player.x - CANVAS_WIDTH / 2;
   if (camera.x < 0) camera.x = 0;
 
-  // Interactions
   coins.forEach((coin) => {
     if (!coin.collected && checkCollision(player, coin)) {
       startQuiz(coin);
@@ -519,14 +500,10 @@ function update() {
 
   if (player.invulnerable > 0) player.invulnerable--;
 
-  // Level Completion Check
   const remaining = coins.filter((c) => !c.collected).length;
   if (remaining === 0) {
-    if (currentLevel === 5) {
-      endGame(true);
-    } else {
-      levelComplete();
-    }
+    if (currentLevel === 5) endGame(true);
+    else levelComplete();
   }
 }
 
@@ -536,21 +513,16 @@ function draw() {
   ctx.save();
   ctx.translate(-camera.x, 0);
 
-  // Platforms
-  ctx.fillStyle = "#795548";
   platforms.forEach((p) => {
+    ctx.fillStyle = "#795548";
     ctx.fillRect(p.x, p.y, p.w, p.h);
     ctx.fillStyle = "#4CAF50";
     ctx.fillRect(p.x, p.y, p.w, 5);
-    ctx.fillStyle = "#795548";
   });
 
-  // Coins
-  ctx.fillStyle = "#FFD700";
-  ctx.strokeStyle = "#DAA520";
-  ctx.lineWidth = 2;
   coins.forEach((c) => {
     if (!c.collected) {
+      ctx.fillStyle = "#FFD700";
       ctx.beginPath();
       ctx.arc(c.x + c.w / 2, c.y + c.h / 2, 12, 0, Math.PI * 2);
       ctx.fill();
@@ -558,11 +530,9 @@ function draw() {
       ctx.fillStyle = "#000";
       ctx.font = "bold 16px Arial";
       ctx.fillText("?", c.x + 9, c.y + 18);
-      ctx.fillStyle = "#FFD700";
     }
   });
 
-  // Enemies
   enemies.forEach((e) => {
     ctx.fillStyle = e.color;
     ctx.beginPath();
@@ -575,7 +545,6 @@ function draw() {
     ctx.fillRect(e.x + 20, e.y + 10, 5, 5);
   });
 
-  // Player
   if (player.invulnerable % 10 < 5) {
     ctx.fillStyle = player.color;
     ctx.fillRect(player.x, player.y, player.w, player.h);
@@ -583,37 +552,25 @@ function draw() {
     let eyeX = player.vx >= 0 ? 18 : 4;
     ctx.fillRect(player.x + eyeX, player.y + 8, 5, 5);
   }
-
   ctx.restore();
 }
 
-/**
- * QUIZ & UI LOGIC
- */
 function startQuiz(coin) {
   gameState = "QUIZ";
   currentQuizCoin = coin;
 
   const modal = document.getElementById("quiz-modal");
-  const wordText = document.getElementById("quiz-word-text");
+  document.getElementById("quiz-word-text").innerText = coin.wordData.word;
   const optionsDiv = document.getElementById("quiz-options");
-
-  wordText.innerText = coin.wordData.word;
   optionsDiv.innerHTML = "";
 
-  // 1. Correct Answer
   let answers = [{ text: coin.wordData.meaning, correct: true }];
-
-  // 2. Wrong Answers (Pull randomly from entire DB, excluding current)
-  // Flatten DB for distractor selection
   const allWords = VOCAB_DATABASE.flat();
   let otherWords = allWords.filter((w) => w.word !== coin.wordData.word);
   otherWords.sort(() => Math.random() - 0.5);
-
-  otherWords.slice(0, 3).forEach((w) => {
-    answers.push({ text: w.meaning, correct: false });
-  });
-
+  otherWords
+    .slice(0, 3)
+    .forEach((w) => answers.push({ text: w.meaning, correct: false }));
   answers.sort(() => Math.random() - 0.5);
 
   answers.forEach((ans) => {
@@ -630,7 +587,6 @@ function startQuiz(coin) {
 
 function handleAnswer(isCorrect) {
   document.getElementById("quiz-modal").classList.remove("active");
-
   if (isCorrect) {
     score += 10;
     currentQuizCoin.collected = true;
@@ -657,8 +613,8 @@ function levelComplete() {
 function updateHUD() {
   document.getElementById("score-display").innerText = `Score: ${score}`;
   document.getElementById("level-display").innerText = `Level ${currentLevel}`;
-  let hearts = "❤️".repeat(Math.max(0, lives));
-  document.getElementById("lives-display").innerText = `Lives: ${hearts}`;
+  document.getElementById("lives-display").innerText =
+    `Lives: ${"❤️".repeat(Math.max(0, lives))}`;
 }
 
 function takeDamage(resetPos = false) {
@@ -666,33 +622,33 @@ function takeDamage(resetPos = false) {
   updateHUD();
   player.invulnerable = 60;
   player.vy = -5;
-
   if (resetPos) {
     player.x -= 100;
     player.y = 300;
     player.vx = 0;
     if (player.x < 0) player.x = 50;
   }
-
   if (lives <= 0) endGame(false);
 }
 
 function endGame(win) {
   gameState = win ? "WIN" : "GAMEOVER";
+
+  // Update final name displays
+  document.getElementById("end-name-win").innerText = playerName;
+  document.getElementById("end-name-lose").innerText = playerName;
+
   if (win) {
     document.getElementById("win-screen").classList.add("active");
-    document.getElementById(
-      "final-score-win"
-    ).innerText = `Final Score: ${score}`;
+    document.getElementById("final-score-win").innerText =
+      `Final Score: ${score}`;
   } else {
     document.getElementById("game-over-screen").classList.add("active");
-    document.getElementById(
-      "final-score-lose"
-    ).innerText = `Final Score: ${score}`;
+    document.getElementById("final-score-lose").innerText =
+      `Final Score: ${score}`;
   }
 }
 
-// Collision Utils
 function checkCollision(r1, r2) {
   return (
     r1.x < r2.x + r2.w &&

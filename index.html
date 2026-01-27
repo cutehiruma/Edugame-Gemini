@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -25,12 +25,11 @@
 
       #game-container {
         position: relative;
-        /* Improved responsiveness logic: */
         width: 100%;
         height: 100%;
-        max-width: 800px; /* Limit max size */
-        max-height: 100vh; /* Ensure it fits vertically */
-        aspect-ratio: 16/9; /* Maintain shape */
+        max-width: 800px;
+        max-height: 100vh;
+        aspect-ratio: 16/9;
         margin: auto;
         background-color: #87ceeb; /* Sky Blue */
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
@@ -85,7 +84,6 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         max-width: 80%;
         width: 500px;
-        /* Tambahkan ini agar layar start/game over juga aman di landscape */
         max-height: 90vh;
         overflow-y: auto;
       }
@@ -121,6 +119,24 @@
         margin: 10px 0;
       }
 
+      /* Input Field Style */
+      input[type="text"] {
+        padding: 12px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        border: 2px solid #4caf50;
+        margin-top: 15px;
+        width: 80%;
+        max-width: 300px;
+        text-align: center;
+        outline: none;
+      }
+
+      input[type="text"]:focus {
+        border-color: #2e7d32;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+      }
+
       button {
         background-color: #4caf50;
         color: white;
@@ -153,8 +169,7 @@
         border: 4px solid #2196f3;
         pointer-events: auto;
         display: none;
-        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5); /* Dim background */
-        /* Tambahan agar tidak keluar layar secara umum */
+        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
         max-height: 90vh;
         overflow-y: auto;
       }
@@ -237,49 +252,38 @@
       }
 
       /* --- MOBILE LANDSCAPE TWEAKS --- */
-      /* Jika tinggi layar kurang dari 500px (biasanya landscape HP) */
       @media (max-height: 500px) and (orientation: landscape) {
-        /* Kontrol Sentuh */
         #touch-controls {
           bottom: 40px;
           padding: 0 40px;
         }
-
         .touch-btn {
           width: 55px;
           height: 55px;
           font-size: 24px;
         }
-
-        /* Perbaikan Tampilan Modal (Soal) agar muat */
         #quiz-modal {
           padding: 10px 20px;
-          max-height: 85vh; /* Batasi tinggi maksimal */
-          overflow-y: auto; /* Scroll jika konten kepanjangan */
+          max-height: 85vh;
+          overflow-y: auto;
         }
-
         .quiz-word {
-          font-size: 1.5rem; /* Kecilkan font kata */
+          font-size: 1.5rem;
           margin: 5px 0;
         }
-
         .options-grid {
-          /* Ubah jadi 2 kolom agar hemat tempat vertikal */
           grid-template-columns: 1fr 1fr;
           gap: 8px;
           margin-top: 10px;
         }
-
         .option-btn {
-          padding: 8px 12px; /* Kecilkan padding tombol */
-          font-size: 0.9rem; /* Kecilkan font opsi */
+          padding: 8px 12px;
+          font-size: 0.9rem;
         }
-
         h2 {
           font-size: 1.2rem;
           margin: 5px 0;
         }
-
         p {
           margin: 5px 0;
         }
@@ -297,19 +301,35 @@
         <div id="lives-display">Lives: ❤️❤️❤️</div>
       </div>
 
-      <!-- Start Screen -->
-      <div id="start-screen" class="ui-layer screen active">
+      <!-- 1. NAME SCREEN (Layar Pertama) -->
+      <div id="name-screen" class="ui-layer screen active">
         <h1>Vocabulary Quest</h1>
-        <p>Journey through 5 levels of increasing difficulty!</p>
-        <p>There are 20 words per level (100 total).</p>
-        <p><b>Controls:</b> Arrow Keys or Touch Buttons</p>
-        <button onclick="startGame(1)">Start Level 1</button>
+        <p>Siapa nama kamu?</p>
+        <input
+          type="text"
+          id="player-name-input"
+          placeholder="Tulis namamu di sini"
+          maxlength="15"
+        />
+        <button onclick="submitName()">Lanjut</button>
+      </div>
+
+      <!-- 2. START SCREEN (Layar Kedua - Instruksi) -->
+      <div id="start-screen" class="ui-layer screen">
+        <h1>
+          Halo,
+          <span id="display-name-start" style="color: #2196f3">Player</span>!
+        </h1>
+        <p>Jelajahi 5 level dengan tingkat kesulitan yang meningkat.</p>
+        <p>Ada total 100 kata bahasa Inggris yang bisa dipelajari.</p>
+        <p><b>Kontrol:</b> Tombol Panah atau Tombol Layar</p>
+        <button onclick="startGame(1)">Mulai Level 1</button>
       </div>
 
       <!-- Quiz Modal -->
       <div id="quiz-modal" class="ui-layer">
         <h2>Vocabulary Check!</h2>
-        <p>What is the meaning of:</p>
+        <p>Apa arti dari kata ini?</p>
         <div class="quiz-word" id="quiz-word-text">WORD</div>
         <div class="options-grid" id="quiz-options">
           <!-- Options injected by JS -->
@@ -318,27 +338,38 @@
 
       <!-- Level Complete Screen -->
       <div id="level-complete-screen" class="ui-layer screen">
-        <h1 style="color: #2196f3">LEVEL COMPLETE!</h1>
-        <p>Great job! You finished this level.</p>
-        <p>Get ready for harder words.</p>
-        <button onclick="nextLevel()">Next Level</button>
+        <h1 style="color: #2196f3">LEVEL SELESAI!</h1>
+        <p>Kerja bagus! Kamu menyelesaikan level ini.</p>
+        <p>Bersiap untuk kata-kata yang lebih sulit.</p>
+        <button onclick="nextLevel()">Level Selanjutnya</button>
       </div>
 
       <!-- Game Over Screen -->
       <div id="game-over-screen" class="ui-layer screen">
         <h1 style="color: #f44336">GAME OVER</h1>
-        <p>You ran out of lives!</p>
+        <p>Yah, nyawa kamu habis!</p>
+        <p>
+          Nama:
+          <span id="end-name-lose" style="font-weight: bold; color: #f44336"
+            >Player</span
+          >
+        </p>
         <p id="final-score-lose">Score: 0</p>
-        <button onclick="startGame(1)">Try Again</button>
+        <button onclick="startGame(1)">Coba Lagi</button>
       </div>
 
       <!-- Win Screen -->
       <div id="win-screen" class="ui-layer screen">
-        <h1 style="color: #ffd700">YOU WIN!</h1>
-        <p>You conquered all 5 levels and 100 words!</p>
-        <p>You are a Vocabulary Master!</p>
+        <h1 style="color: #ffd700">KAMU MENANG!</h1>
+        <p>Selamat! Kamu telah menaklukkan 100 kata!</p>
+        <p>
+          Nama:
+          <span id="end-name-win" style="font-weight: bold; color: #2196f3"
+            >Player</span
+          >
+        </p>
         <p id="final-score-win">Score: 0</p>
-        <button onclick="startGame(1)">Play Again</button>
+        <button onclick="startGame(1)">Main Lagi</button>
       </div>
 
       <!-- Touch Controls -->
